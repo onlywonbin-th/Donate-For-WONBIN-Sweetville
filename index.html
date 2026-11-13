@@ -83,7 +83,7 @@ async function draw(name,dt){
  x.fillStyle="#2b2125";x.font="italic 500 40px Lora,serif";
  let y=wrap(x,"for making Wonbin's 25th birthday an even more special year. Wishing you a lovely day!",W/2,700,820,58);
  x.font="600 38px Fredoka,sans-serif";x.fillStyle="#ff4655";x.fillText("#25thWONBINSweetville",W/2,y+80);
- if(img.complete&&img.naturalWidth){const py=y+110,fy=H-125,maxH=fy-28-45-py-24,ph=Math.max(180,Math.min(375,maxH)),pw=ph*img.naturalWidth/img.naturalHeight;
+ if(img.complete&&img.naturalWidth){const py=y+110,fy=H-115,maxH=fy-28-45-py-24,ph=Math.max(180,Math.min(375,maxH)),pw=ph*img.naturalWidth/img.naturalHeight;
   x.save();x.translate(W/2,py+ph/2);x.rotate(-.03);x.fillStyle="#fff";x.fillRect(-pw/2-12,-ph/2-12,pw+24,ph+24);x.lineWidth=4;x.strokeStyle="#2b2125";x.strokeRect(-pw/2-12,-ph/2-12,pw+24,ph+24);x.drawImage(img,-pw/2,-ph/2,pw,ph);x.restore()}
  x.fillStyle="#6b5a62";x.font="italic 500 28px Lora,serif";x.fillText("@ONLYWONBIN_TH  ·  "+dt,W/2,H-125);
  blob=await new Promise(r=>c.toBlob(r,"image/png"));
