@@ -107,7 +107,15 @@ input[type="file"] {
 <div class="c" id="fc"><div id="closed" class="err" style="display:none">ปิดรับโดเนทแล้วค่ะ ขอบคุณทุกคนมากนะคะ 💗</div>
 <div id="fm"><label for="em">อีเมล <i>*</i></label><input id="em" type="email" autocomplete="email" placeholder="you@gmail.com">
 <label for="ac">ชื่อแอคทวิต (eg. @onlywonbin_th) <i>*</i></label><small>หากไม่ต้องการเปิดเผย ให้ใส่ -</small><input id="ac" placeholder="@onlywonbin_th">
-<label for="am">จำนวนเงินที่โดเนท ( กรอกเฉพาะตัวเลข ) <i>*</i></label><input id="am" inputmode="numeric" placeholder="100">
+<label for="am">จำนวนเงินที่โดเนท ( กรอกเฉพาะตัวเลข ) <i>*</i></label><input
+  id="am" 
+  name="amount"
+  min="0"
+  step="0.01"
+  inputmode="decimal"
+  placeholder="100"
+  required
+/>
 <label for="dt">วัน-เวลาที่โดเนท <i>*</i></label><input id="dt" type="datetime-local">
 <label for="pf">หลักฐานการโดเนท (รูปภาพ)</label><small>อัปโหลดรูปสลิป 1 รูป ขนาดสูงสุด 10 MB · แนบไม่ได้ รบกวนส่งใน DM <a href="https://twitter.com/ONLYWONBIN_TH" target="_blank" rel="noopener">@ONLYWONBIN_TH</a> นะคะ</small><input id="pf" type="file" accept="image/*"><img id="pv" alt="" style="display:none;max-width:200px;margin-top:8px;border:2px solid var(--ink);border-radius:12px">
 <div class="err" id="er"></div>
@@ -161,7 +169,7 @@ async function sub(){
  const em=$("em").value.trim(),ac=$("ac").value.trim(),am=$("am").value.trim(),dt=$("dt").value,er=$("er");
  if(!/^\S+@\S+\.\S+$/.test(em))return er.textContent="กรุณากรอกอีเมลให้ถูกต้องค่ะ";
  if(!ac)return er.textContent="กรุณากรอกชื่อแอคทวิต (หากไม่ต้องการเปิดเผยให้ใส่ -)";
- if(!/^\d+$/.test(am)||+am<=0)return er.textContent="จำนวนเงิน กรอกเฉพาะตัวเลขค่ะ";
+if (!/^\d+(\.\d{1,2})?$/.test(am) || +am <= 0)return er.textContent = "จำนวนเงิน กรอกเฉพาะตัวเลขค่ะ";
  if(!dt)return er.textContent="กรุณาเลือกวัน-เวลาที่โดเนทค่ะ";
  const pf=$("pf").files[0];if(pf&&(!pf.type.startsWith("image/")||pf.size>10*1024*1024))return er.textContent="หลักฐานต้องเป็นรูปภาพ ขนาดไม่เกิน 10 MB ค่ะ";
  er.textContent="";const d=new Date(dt);let pd="";if(pf){try{pd=await shrink(pf)}catch(e){return er.textContent="อ่านรูปไม่ได้ ลองไฟล์อื่นนะคะ"}}
