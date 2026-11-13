@@ -25,6 +25,8 @@ button.alt{background:var(--sky);color:#2b2125}
 .err{color:var(--red);font-weight:600;min-height:1.3em;margin:8px 0 0}
 #res{display:none;text-align:center}#res canvas{width:100%;max-width:460px;border:2.5px solid var(--ink);border-radius:12px}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+button:disabled{opacity:.75;cursor:wait}.sp{display:inline-block;width:1em;height:1em;vertical-align:-.15em;margin-right:8px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+#dg{display:none;position:fixed;inset:0;z-index:50;background:rgba(43,33,37,.55);align-items:center;justify-content:center;padding:20px}#dg>div{background:var(--card);border:2.5px solid var(--ink);border-radius:18px;padding:26px 30px;text-align:center;box-shadow:5px 5px 0 var(--red);max-width:320px}#dg .sp{display:block;width:2.4em;height:2.4em;margin:0 auto 12px;border-color:var(--red);border-top-color:transparent}
 .ft{text-align:center;color:var(--mut);font-size:.85rem}
 a{color:var(--red)}
 </style></head><body><div class="w">
@@ -51,10 +53,11 @@ a{color:var(--red)}
 <div class="c" id="res"><h1 style="font-size:1.5rem">Thank you! 🎀</h1>
 <p>บันทึกข้อมูลเรียบร้อย — เซฟ certificate ไว้ได้เลยค่ะ (บนมือถือกดค้างที่รูปเพื่อบันทึกได้)</p>
 <canvas id="cv" width="1080" height="1350"></canvas>
-<div class="row"><button id="sv">⬇ Save certificate</button><button class="alt" id="nw">กรอกอีกครั้ง</button></div></div>
+<div class="row"><button id="sv">⬇ Save certificate</button><button class="alt" id="cp">คัดลอกข้อมูล (TSV)</button><button class="alt" id="nw">กรอกอีกครั้ง</button></div></div>
 <p class="ft">#25thWONBINSweetville · @ONLYWONBIN_TH</p></div>
+<div id="dg" role="alertdialog" aria-live="assertive"><div><span class="sp"></span><b>กำลังส่งข้อมูล...</b><small style="margin:6px 0 0">กรุณารอสักครู่ อย่าปิดหน้านี้นะคะ 💗</small></div></div>
 <script>
-const SHEET_URL="https://script.google.com/macros/s/AKfycbz_SwtHk1kldsRcztgwh78zjde2NInlfHqAT2TMzmefDWXqWHnbrKTq260ilXirYt8I/exec"; /* วาง Google Apps Script Web App URL ที่นี่ (ใช้ได้เมื่อโฮสต์เอง เช่น Vercel) */
+const SHEET_URL=""; /* วาง Google Apps Script Web App URL ที่นี่ (ใช้ได้เมื่อโฮสต์เอง เช่น Vercel) */
 const END=new Date("2027-01-24T23:59:00+07:00"),$=i=>document.getElementById(i);
 if(new Date()>END){$("closed").style.display="block";$("fm").style.display="none"}
 const pad=n=>String(n).padStart(2,"0"),now=new Date();
@@ -90,7 +93,8 @@ async function draw(name,dt){
 }
 function shrink(f){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(1,1400/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.82))};i.onerror=no;i.src=u})}
 $("pf").onchange=async()=>{const f=$("pf").files[0],p=$("pv");if(!f){p.style.display="none";return}try{p.src=await shrink(f);p.style.display="block"}catch(e){p.style.display="none"}};
-$("go").onclick=async()=>{
+$("go").onclick=async()=>{const b=$("go"),t0=Date.now();b.disabled=true;try{await sub()}finally{if($("dg").style.display==="flex")await new Promise(r=>setTimeout(r,Math.max(0,900-(Date.now()-t0))));$("dg").style.display="none";b.disabled=false}};
+async function sub(){
  const em=$("em").value.trim(),ac=$("ac").value.trim(),am=$("am").value.trim(),dt=$("dt").value,er=$("er");
  if(!/^\S+@\S+\.\S+$/.test(em))return er.textContent="กรุณากรอกอีเมลให้ถูกต้องค่ะ";
  if(!ac)return er.textContent="กรุณากรอกชื่อแอคทวิต (หากไม่ต้องการเปิดเผยให้ใส่ -)";
@@ -98,13 +102,13 @@ $("go").onclick=async()=>{
  if(!dt)return er.textContent="กรุณาเลือกวัน-เวลาที่โดเนทค่ะ";
  const pf=$("pf").files[0];if(pf&&(!pf.type.startsWith("image/")||pf.size>10*1024*1024))return er.textContent="หลักฐานต้องเป็นรูปภาพ ขนาดไม่เกิน 10 MB ค่ะ";
  er.textContent="";const d=new Date(dt);let pd="";if(pf){try{pd=await shrink(pf)}catch(e){return er.textContent="อ่านรูปไม่ได้ ลองไฟล์อื่นนะคะ"}}
- row={timestamp:new Date().toISOString(),email:em,account:ac,amount:am,donated_at:dt.replace("T"," ")};
+ $("dg").style.display="flex";row={timestamp:new Date().toISOString(),email:em,account:ac,amount:am,donated_at:dt.replace("T"," ")};
  let ok=false;if(SHEET_URL){try{await fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify({...row,proof_name:pf?pf.name:"",proof_data:pd})});ok=true}catch(e){}}
  const nm=ac==="-"?"Sweet Supporter":ac;
  const ds=d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
  await draw(nm,ds);
  $("fc").style.display="none";$("res").style.display="block";$("res").scrollIntoView({behavior:"smooth"});
-};
+}
 $("sv").onclick=async()=>{try{const d=await claude.use("downloads");if(d)await d.save({filename:"WONBIN-Sweetville-certificate.png",data:blob});else alert("กดค้างที่รูปเพื่อบันทึกได้เลยค่ะ")}catch(e){}};
 $("cp").onclick=async()=>{try{await navigator.clipboard.writeText([row.timestamp,row.email,row.account,row.amount,row.donated_at].join("\t"));$("cp").textContent="คัดลอกแล้ว ✓"}catch(e){}};
 $("nw").onclick=()=>{$("res").style.display="none";$("fc").style.display="block";$("am").value="";$("pf").value="";$("pv").style.display="none"};
