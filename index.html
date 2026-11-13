@@ -54,7 +54,7 @@ a{color:var(--red)}
 <div class="row"><button id="sv">⬇ Save certificate</button><button class="alt" id="cp">คัดลอกข้อมูล (TSV)</button><button class="alt" id="nw">กรอกอีกครั้ง</button></div></div>
 <p class="ft">#25thWONBINSweetville · @ONLYWONBIN_TH</p></div>
 <script>
-const SHEET_URL=""; /* วาง Google Apps Script Web App URL ที่นี่ (ใช้ได้เมื่อโฮสต์เอง เช่น Vercel) */
+const SHEET_URL="https://script.google.com/macros/s/AKfycbz_SwtHk1kldsRcztgwh78zjde2NInlfHqAT2TMzmefDWXqWHnbrKTq260ilXirYt8I/exec"; /* วาง Google Apps Script Web App URL ที่นี่ (ใช้ได้เมื่อโฮสต์เอง เช่น Vercel) */
 const END=new Date("2027-01-24T23:59:00+07:00"),$=i=>document.getElementById(i);
 if(new Date()>END){$("closed").style.display="block";$("fm").style.display="none"}
 const pad=n=>String(n).padStart(2,"0"),now=new Date();
@@ -83,9 +83,9 @@ async function draw(name,dt){
  x.fillStyle="#2b2125";x.font="italic 500 40px Lora,serif";
  let y=wrap(x,"for making Wonbin's 25th birthday an even more special year. Wishing you a lovely day!",W/2,700,820,58);
  x.font="600 38px Fredoka,sans-serif";x.fillStyle="#ff4655";x.fillText("#25thWONBINSweetville",W/2,y+80);
- if(img.complete&&img.naturalWidth){const pw=300,ph=pw*img.naturalHeight/img.naturalWidth,px=W/2-pw/2,py=y+120;
+ if(img.complete&&img.naturalWidth){const py=y+110,fy=H-125,maxH=fy-28-45-py-24,ph=Math.max(180,Math.min(375,maxH)),pw=ph*img.naturalWidth/img.naturalHeight;
   x.save();x.translate(W/2,py+ph/2);x.rotate(-.03);x.fillStyle="#fff";x.fillRect(-pw/2-12,-ph/2-12,pw+24,ph+24);x.lineWidth=4;x.strokeStyle="#2b2125";x.strokeRect(-pw/2-12,-ph/2-12,pw+24,ph+24);x.drawImage(img,-pw/2,-ph/2,pw,ph);x.restore()}
- x.fillStyle="#6b5a62";x.font="italic 500 28px Lora,serif";x.fillText("@ONLYWONBIN_TH  ·  "+dt,W/2,H-95);
+ x.fillStyle="#6b5a62";x.font="italic 500 28px Lora,serif";x.fillText("@ONLYWONBIN_TH  ·  "+dt,W/2,H-125);
  blob=await new Promise(r=>c.toBlob(r,"image/png"));
 }
 function shrink(f){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(1,1400/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*s;c.height=i.height*s;c.getContext("2d").drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.82))};i.onerror=no;i.src=u})}
