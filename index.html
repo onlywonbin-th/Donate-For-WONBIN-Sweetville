@@ -109,6 +109,18 @@ async function sub(){
  await draw(nm,ds);
  $("fc").style.display="none";$("res").style.display="block";$("res").scrollIntoView({behavior:"smooth"});
 }
-$("sv").onclick=async()=>{try{const d=await claude.use("downloads");if(d)await d.save({filename:"WONBIN-Sweetville-certificate.png",data:blob});else alert("กดค้างที่รูปเพื่อบันทึกได้เลยค่ะ")}catch(e){}};
+$("sv").onclick=async()=>{
+ if(!blob)return;
+ try{
+  if(typeof claude!=="undefined"&&claude.use){
+   const d=await claude.use("downloads");
+   if(d){await d.save({filename:"WONBIN-Sweetville-certificate.png",data:blob});return}
+  }
+ }catch(e){}
+ const u=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=u;a.download="WONBIN-Sweetville-certificate.png";
+ document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(u),2000);
+};
 $("nw").onclick=()=>{$("res").style.display="none";$("fc").style.display="block";$("am").value="";$("pf").value="";$("pv").style.display="none"};
 </script></body></html>
