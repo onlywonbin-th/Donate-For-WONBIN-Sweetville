@@ -110,6 +110,5 @@ async function sub(){
  $("fc").style.display="none";$("res").style.display="block";$("res").scrollIntoView({behavior:"smooth"});
 }
 $("sv").onclick=async()=>{try{const d=await claude.use("downloads");if(d)await d.save({filename:"WONBIN-Sweetville-certificate.png",data:blob});else alert("กดค้างที่รูปเพื่อบันทึกได้เลยค่ะ")}catch(e){}};
-$("cp").onclick=async()=>{try{await navigator.clipboard.writeText([row.timestamp,row.email,row.account,row.amount,row.donated_at].join("\t"));$("cp").textContent="คัดลอกแล้ว ✓"}catch(e){}};
 $("nw").onclick=()=>{$("res").style.display="none";$("fc").style.display="block";$("am").value="";$("pf").value="";$("pv").style.display="none"};
 </script></body></html>
